@@ -1,5 +1,6 @@
 import 'package:bankbank/presentation/pages/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'BankBank',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        fontFamily: GoogleFonts.quicksand().fontFamily,
         useMaterial3: true,
       ),
       home: const HomePage(),

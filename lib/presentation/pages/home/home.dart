@@ -34,7 +34,6 @@ class HomePage extends StatelessWidget {
                 title: const Text('Log in'),
                 onTap: () {
                   // Navigate to the login page
-
                 },
               ),
             ),
