@@ -2,10 +2,9 @@ import 'dart:convert';
 import 'package:bankbank/data/datasources/remote/users_remote_datasource.dart';
 import 'package:bankbank/domain/entities/user.dart';
 import 'package:bankbank/domain/entities/user_login.dart';
-import 'package:http/http.dart' as http;
 
 class UserRepository {
-  final UsersRemoteDatasource remoteDatasource = UsersRemoteDatasource(client: http.Client());
+  final UsersRemoteDatasource remoteDatasource = UsersRemoteDatasource();
 
   Future<User> register(String username, String password) async {
   var response = jsonDecode(await remoteDatasource.register(username, password));
@@ -14,9 +13,13 @@ class UserRepository {
   }
 
   Future<User?> login(UserLogin user) async {
-    var response = jsonDecode(await remoteDatasource.login(user));
-    var userLogin = User.fromJson(response);
-    return userLogin;
+    try {
+      var response = jsonDecode(await remoteDatasource.login(user));
+      var userLogin = User.fromJson(response);
+      return userLogin;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<User> getUserById(int userId) async {

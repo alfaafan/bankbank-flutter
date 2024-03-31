@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:bankbank/domain/entities/role.dart';
+
 import 'account.dart';
 import 'card.dart';
 
@@ -18,7 +20,8 @@ class User {
   DateTime lastLoginDate;
   List<Account> accounts;
   List<Card> cards;
-  List<String> roles;
+  List<Role> roles;
+  String? token;
 
   User({
     required this.userId,
@@ -33,6 +36,7 @@ class User {
     required this.accounts,
     required this.cards,
     required this.roles,
+    this.token,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -47,7 +51,8 @@ class User {
     lastLoginDate: DateTime.parse(json["LastLoginDate"]),
     accounts: List<Account>.from(json["Accounts"].map((x) => Account.fromJson(x))),
     cards: List<Card>.from(json["Cards"].map((x) => Card.fromJson(x))),
-    roles: List<String>.from(json["Roles"].map((x) => x)),
+    roles: List<Role>.from(json["Roles"].map((x) => Role.fromJson(x))),
+    token: json["Token"],
   );
 
   Map<String, dynamic> toJson() => {

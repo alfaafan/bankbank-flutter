@@ -15,7 +15,8 @@ class UserUsecase {
     return await _userRepository.register(username, password);
   }
 
-  Future<User?> login(UserLogin user) async {
+  Future<User?> login(String username, String password) async {
+    final user = UserLogin(username: username, password: password);
     return await _userRepository.login(user);
   }
 }
