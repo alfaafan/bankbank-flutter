@@ -1,8 +1,10 @@
+import 'package:bankbank/presentation/screens/auth/login.dart';
+import 'package:bankbank/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class LandingPage extends StatelessWidget {
+  const LandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,8 @@ class HomePage extends StatelessWidget {
                 title: const Text('Log in'),
                 onTap: () {
                   // Navigate to the login page
+                  Navigator.push(context, MaterialPageRoute(builder:
+                      (context) => const LoginPage()));
                 },
               ),
             ),
@@ -44,7 +48,9 @@ class HomePage extends StatelessWidget {
                 leading: const Icon(Icons.person_add),
                 title: const Text('Sign up'),
                 onTap: () {
-                  // Navigate to the sign up page
+                  // Navigate
+                  Navigator.push(context, MaterialPageRoute(builder:
+                      (context) => const HomePage()));
                 },
               ),
             ),

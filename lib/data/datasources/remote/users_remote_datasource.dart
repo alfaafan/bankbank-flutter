@@ -8,7 +8,8 @@ class UsersRemoteDatasource {
 
   Future<String> register(String username, String password) async {
     final response = await client.post(
-        Uri.parse('https://bankbank.com/register'),
+        Uri.parse('https://app.actualsolusi'
+            '.com/bsi/bankbank/api/users/register'),
         body: {
           'username': username,
           'password': password,
@@ -23,7 +24,7 @@ class UsersRemoteDatasource {
 
   Future<String> login(UserLogin user) async {
     final response = await client.post(
-        Uri.parse('https://bankbank.com/login'),
+        Uri.parse('https://app.actualsolusi.com/bsi/bankbank/api/users/login'),
         body: {
           'username': user.username,
           'password': user.password,
@@ -32,6 +33,17 @@ class UsersRemoteDatasource {
 
     if (response.statusCode != 200) {
       throw Exception('Failed to login');
+    }
+    return response.body;
+  }
+
+  Future<String> getUserById(int userId) async {
+    final response = await client.get(
+        Uri.parse('https://app.actualsolusi.com/bsi/bankbank/api/users/$userId'),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to get user');
     }
     return response.body;
   }
