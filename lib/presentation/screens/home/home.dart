@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:bankbank/data/model/account.dart';
 import 'package:bankbank/data/model/card.dart';
 import 'package:bankbank/data/model/role.dart';
 import 'package:bankbank/data/model/user.dart';
 import 'package:bankbank/data/repositories/user_repository.dart';
+import 'package:bankbank/domain/usecases/transaction_usecase.dart';
 import 'package:bankbank/domain/usecases/user_usecase.dart';
 import 'package:bankbank/presentation/common/drawer.dart';
 import 'package:bankbank/presentation/common/theme_data.dart';
@@ -10,6 +13,7 @@ import 'package:bankbank/presentation/screens/auth/login.dart';
 import 'package:bankbank/utils/curreny_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,12 +24,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final UserUsecase userUsecase;
+  late final TransactionUsecase transactionUsecase;
   bool isHidden = true;
 
   @override
   void initState() {
     super.initState();
     userUsecase = UserUsecase(UserRepository());
+    transactionUsecase = TransactionUsecase();
   }
 
 
@@ -122,11 +128,14 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: isHidden
-                          ? const Text('Rp. *********')
+                          ? const Text('Rp *********', style: TextStyle(color: AppColors.blueDark,
+                      fontWeight: FontWeight
+                          .bold, fontSize: 24))
                           : Text(CurrencyFormatter.formatToIdr(account!
                           .balance), style:
                       const TextStyle
-                        (color: AppColors.blueDark),),
+                        (color: AppColors.blueDark, fontWeight: FontWeight
+                          .bold, fontSize: 24),),
                       trailing: TextButton(
                         onPressed: () {
                           setState(() {
@@ -224,20 +233,48 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Card(
-                margin: EdgeInsets.zero,
-                child: Column(
-                  children: List.generate(
-                    10,
-                        (index) => ListTile(
-                      title: Text(
-                        'Transaksi ${index + 1}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: const Text('22-01-24 08:00'),
-                    ),
-                  ),
-                ),
+              FutureBuilder(
+                future: transactionUsecase.getTransactionsByAccountId
+                  (account!.accountId),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (snapshot.data == null) {
+                    return const Center(child: Text('No transactions', style:
+                    TextStyle(color: Colors.white),));
+                  } else {
+                    var transactions = snapshot.data;
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 5,
+                      itemBuilder: (context, index) {
+                        var transaction = transactions?[index];
+                        return Card(
+                          color: Colors.white,
+                          child: ListTile(
+                            title: Text(transaction?.description ?? 'No '
+                                'description'),
+                            subtitle: Text(DateFormat('yyyy-MM-dd HH:mm')
+                                .format(transaction?.transactionDate ?? DateTime.now())
+                                , style: const TextStyle(fontSize:
+                            12)),
+                            trailing: transaction?.sourceAccountId == account
+                                .accountId
+                                ? Text('-${CurrencyFormatter.formatToIdr
+                              (transaction!.amount as double)}', style: const TextStyle
+                              (color: Colors.red, fontWeight: FontWeight.bold))
+                                : Text('+${CurrencyFormatter.formatToIdr
+                              (transaction!.amount as double)}', style: const TextStyle
+                              (color: Colors.green, fontWeight: FontWeight.bold))
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
               ),
             ]),
           ),

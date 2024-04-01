@@ -21,7 +21,7 @@ class AccountAdapter extends TypeAdapter<Account> {
       userId: fields[1] as int,
       accountNumber: fields[2] as String,
       accountTypeId: fields[3] as int,
-      balance: fields[4] as int,
+      balance: fields[4] as double,
       status: fields[5] as String,
     );
   }

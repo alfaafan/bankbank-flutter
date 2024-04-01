@@ -3,7 +3,7 @@ class AccountModel {
   int userId;
   String accountNumber;
   int accountTypeId;
-  int balance;
+  double balance;
   String status;
 
   AccountModel({

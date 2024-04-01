@@ -4,11 +4,11 @@
 
 import 'dart:convert';
 
-Transaction transactionFromJson(String str) => Transaction.fromJson(json.decode(str));
+TransactionModel transactionFromJson(String str) => TransactionModel.fromJson(json.decode(str));
 
-String transactionToJson(Transaction data) => json.encode(data.toJson());
+String transactionToJson(TransactionModel data) => json.encode(data.toJson());
 
-class Transaction {
+class TransactionModel {
   int transactionId;
   int transactionCategoryId;
   dynamic transactionCategory;
@@ -22,7 +22,7 @@ class Transaction {
   DateTime transactionDate;
   String status;
 
-  Transaction({
+  TransactionModel({
     required this.transactionId,
     required this.transactionCategoryId,
     required this.transactionCategory,
@@ -37,7 +37,7 @@ class Transaction {
     required this.status,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) => Transaction(
+  factory TransactionModel.fromJson(Map<String, dynamic> json) => TransactionModel(
     transactionId: json["TransactionID"],
     transactionCategoryId: json["TransactionCategoryID"],
     transactionCategory: json["TransactionCategory"],

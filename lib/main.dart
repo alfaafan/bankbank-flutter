@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.quicksand().fontFamily,
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const LandingPage(),
       debugShowCheckedModeBanner: false,
     );
   }

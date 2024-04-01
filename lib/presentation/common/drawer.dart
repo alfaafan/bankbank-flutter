@@ -1,4 +1,10 @@
+import 'package:bankbank/data/model/account.dart';
+import 'package:bankbank/data/model/card.dart';
+import 'package:bankbank/data/model/role.dart';
+import 'package:bankbank/data/model/user.dart';
+import 'package:bankbank/presentation/screens/auth/login.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -33,7 +39,39 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
-              // Handle logout logic
+              // Logout user, clear hive box, redirect to login page
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Logout'),
+                      content: const Text('Are you sure you want to logout?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Hive.box<User>('userBox').clear();
+                            Hive.box<Account>('accountBox').clear();
+                            Hive.box<UserCard>('cardBox').clear();
+                            Hive.box<Role>('roleBox').clear();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                                return const LoginPage();
+                              }));
+                            });
+
+                          },
+                          child: const Text('Yes'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('No'),
+                        ),
+                      ],
+                    );
+                  });
+
             },
           ),
           ListTile(

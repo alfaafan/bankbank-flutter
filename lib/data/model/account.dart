@@ -17,7 +17,7 @@ class Account extends HiveObject {
   final int accountTypeId;
 
   @HiveField(4)
-  final int balance;
+  final double balance;
 
   @HiveField(5)
   final String status;
