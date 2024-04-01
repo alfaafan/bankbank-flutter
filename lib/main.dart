@@ -1,10 +1,16 @@
+import 'package:bankbank/data/datasources/local/hive_datasource.dart';
 import 'package:bankbank/presentation/common/theme_data.dart';
 import 'package:bankbank/presentation/screens/auth/login.dart';
+import 'package:bankbank/presentation/screens/home/home.dart';
+import 'package:bankbank/presentation/screens/home/landing_page.dart';
 // import 'package:bankbank/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  HiveDatasource hive = HiveDatasource();
+  await hive.init();
   runApp(const MyApp());
 }
 
@@ -21,7 +27,7 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.quicksand().fontFamily,
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: const HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }

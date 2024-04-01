@@ -4,11 +4,11 @@ import 'package:bankbank/domain/entities/role.dart';
 import 'account.dart';
 import 'card.dart';
 
-User userFromJson(String str) => User.fromJson(json.decode(str));
+UserModel userFromJson(String str) => UserModel.fromJson(json.decode(str));
 
-String userToJson(User data) => json.encode(data.toJson());
+String userToJson(UserModel data) => json.encode(data.toJson());
 
-class User {
+class UserModel {
   int userId;
   String username;
   String email;
@@ -18,12 +18,12 @@ class User {
   DateTime dateOfBirth;
   DateTime registrationDate;
   DateTime lastLoginDate;
-  List<Account> accounts;
-  List<Card> cards;
-  List<Role> roles;
+  List<AccountModel> accounts;
+  List<CardModel> cards;
+  List<RoleModel> roles;
   String? token;
 
-  User({
+  UserModel({
     required this.userId,
     required this.username,
     required this.email,
@@ -39,7 +39,7 @@ class User {
     this.token,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     userId: json["UserId"],
     username: json["Username"],
     email: json["Email"],
@@ -49,9 +49,10 @@ class User {
     dateOfBirth: DateTime.parse(json["DateOfBirth"]),
     registrationDate: DateTime.parse(json["RegistrationDate"]),
     lastLoginDate: DateTime.parse(json["LastLoginDate"]),
-    accounts: List<Account>.from(json["Accounts"].map((x) => Account.fromJson(x))),
-    cards: List<Card>.from(json["Cards"].map((x) => Card.fromJson(x))),
-    roles: List<Role>.from(json["Roles"].map((x) => Role.fromJson(x))),
+    accounts: List<AccountModel>.from(json["Accounts"].map((x) => AccountModel.fromJson(x))),
+    cards: List<CardModel>.from(json["Cards"].map((x) => CardModel.fromJson(x))),
+    roles: List<RoleModel>.from(json["Roles"].map((x) => RoleModel.fromJson
+      (x))),
     token: json["Token"],
   );
 

@@ -1,3 +1,4 @@
+import 'package:bankbank/presentation/common/theme_data.dart';
 import 'package:bankbank/presentation/screens/auth/login.dart';
 import 'package:bankbank/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
@@ -30,10 +31,11 @@ class LandingPage extends StatelessWidget {
             const SizedBox(height: 60.0),
             Card(
               margin: const EdgeInsets.all(16.0),
-              color: Colors.blueAccent,
+              color: AppColors.blueDark,
               child: ListTile(
-                leading: const Icon(Icons.login),
-                title: const Text('Log in'),
+                leading: const Icon(Icons.login, color: Colors.white,),
+                title: const Text('Log in', style: TextStyle(color: Colors
+                    .white)),
                 onTap: () {
                   // Navigate to the login page
                   Navigator.push(context, MaterialPageRoute(builder:
@@ -43,10 +45,10 @@ class LandingPage extends StatelessWidget {
             ),
             Card(
               margin: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 16.0),
-              color: Colors.blueAccent,
+              color: AppColors.blueMedium,
               child: ListTile(
-                leading: const Icon(Icons.person_add),
-                title: const Text('Sign up'),
+                leading: const Icon(Icons.person_add, color: Colors.white),
+                title: const Text('Sign up', style: TextStyle(color: Colors.white)),
                 onTap: () {
                   // Navigate
                   Navigator.push(context, MaterialPageRoute(builder:

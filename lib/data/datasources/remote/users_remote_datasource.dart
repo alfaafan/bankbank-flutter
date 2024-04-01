@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:bankbank/domain/entities/user.dart';
 import 'package:bankbank/domain/entities/user_login.dart';
 import 'package:http/http.dart' as http;
 
@@ -36,8 +35,6 @@ class UsersRemoteDatasource {
           'password': user.password,
         })
     );
-
-    print('response: ${response.body}');
 
     if (response.statusCode != 200) {
       throw Exception('Failed to login');

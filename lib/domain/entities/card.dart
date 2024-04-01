@@ -1,11 +1,11 @@
-class Card {
+class CardModel {
   int cardId;
   String cardNumber;
   DateTime expirationDate;
   String status;
   int userId;
 
-  Card({
+  CardModel({
     required this.cardId,
     required this.cardNumber,
     required this.expirationDate,
@@ -13,7 +13,7 @@ class Card {
     required this.userId,
   });
 
-  factory Card.fromJson(Map<String, dynamic> json) => Card(
+  factory CardModel.fromJson(Map<String, dynamic> json) => CardModel(
     cardId: json["CardId"],
     cardNumber: json["CardNumber"],
     expirationDate: DateTime.parse(json["ExpirationDate"]),

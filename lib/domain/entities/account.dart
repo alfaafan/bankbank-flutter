@@ -1,4 +1,4 @@
-class Account {
+class AccountModel {
   int accountId;
   int userId;
   String accountNumber;
@@ -6,7 +6,7 @@ class Account {
   int balance;
   String status;
 
-  Account({
+  AccountModel({
     required this.accountId,
     required this.userId,
     required this.accountNumber,
@@ -15,7 +15,7 @@ class Account {
     required this.status,
   });
 
-  factory Account.fromJson(Map<String, dynamic> json) => Account(
+  factory AccountModel.fromJson(Map<String, dynamic> json) => AccountModel(
     accountId: json["AccountId"],
     userId: json["UserId"],
     accountNumber: json["AccountNumber"],
