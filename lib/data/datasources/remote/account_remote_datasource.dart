@@ -2,16 +2,17 @@ import 'package:bankbank/data/model/user.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
-class TransactionRemoteDatasource {
+class AccountRemoteDatasource {
   final http.Client client = http.Client();
   final String baseUrl = 'https://app.actualsolusi'
-      '.com/bsi/bankbank/api/transactions/';
+      '.com/bsi/bankbank/api/Accounts';
+  AccountRemoteDatasource();
 
-  Future<String> getTransactionByAccountId(int accountId) async {
+  Future<String> getAccountByUserId(int userId) async {
     var box = Hive.box<User>('userBox');
     var user = box.get('user');
     final response = await client.get(
-      Uri.parse('${baseUrl}account/$accountId'),
+      Uri.parse('$baseUrl/$userId'),
       headers: {
         'accept': 'application/json',
         'Content-Type': 'application/json',
@@ -20,15 +21,9 @@ class TransactionRemoteDatasource {
       },
     );
 
-    if (response.statusCode == 404) {
-      return '[]';
-    }
-
     if (response.statusCode != 200) {
-      throw Exception('Failed to get transaction');
+      throw Exception('Failed to get account');
     }
     return response.body;
   }
-
-  // Future<String> transfer()
 }

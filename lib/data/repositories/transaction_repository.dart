@@ -13,6 +13,6 @@ class TransactionRepository {
     for (var item in response) {
       transactions.add(TransactionModel.fromJson(item));
     }
-    return transactions;
+    return transactions.reversed.toList();
   }
 }

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:bankbank/data/model/account.dart';
 import 'package:bankbank/data/model/card.dart';
 import 'package:bankbank/data/model/role.dart';
@@ -9,11 +7,14 @@ import 'package:bankbank/domain/usecases/transaction_usecase.dart';
 import 'package:bankbank/domain/usecases/user_usecase.dart';
 import 'package:bankbank/presentation/common/drawer.dart';
 import 'package:bankbank/presentation/common/theme_data.dart';
+import 'package:bankbank/presentation/providers/account_provider.dart';
+import 'package:bankbank/presentation/providers/transaction_provider.dart';
 import 'package:bankbank/presentation/screens/auth/login.dart';
 import 'package:bankbank/utils/curreny_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,6 +31,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    context.read<AccountProvider>().fetchAccount();
+    context.read<TransactionProvider>().fetchTransactionsById();
     userUsecase = UserUsecase(UserRepository());
     transactionUsecase = TransactionUsecase();
   }
@@ -45,13 +48,13 @@ class _HomePageState extends State<HomePage> {
         }));
       });
     }
-    var user = userBox.getAt(0);
+    var user = userBox.get('user');
     var accountBox = Hive.box<Account>('accountBox');
-    var account = accountBox.getAt(0);
+    var account = accountBox.get('account');
     var cardBox = Hive.box<UserCard>('cardBox');
-    var card = cardBox.getAt(0);
+    cardBox.get('card');
     var roleBox = Hive.box<Role>('roleBox');
-    var role = roleBox.getAt(0);
+    roleBox.get('role');
 
     return Scaffold(
       backgroundColor: AppColors.blueDark,
@@ -92,7 +95,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
               Center(
                 child: Text(
-                  "Welcome, ${user?.username.toUpperCase()}!",
+                  "Hello, ${user?.firstName.toUpperCase()}!",
                   style: const TextStyle(
                     fontSize: 24.0,
                     fontWeight: FontWeight.bold,
@@ -100,53 +103,64 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              Card(
-                margin: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.account_balance_wallet, color: AppColors.blueDark),
-                          const SizedBox(width: 10),
-                          Text(
-                            'Account ${account?.accountNumber}',
-                            style: const TextStyle(
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.blueDark,
+              Consumer<AccountProvider>(
+                builder: (context, accountProvider, child) => Card(
+                  margin: const EdgeInsets.all(12.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.account_balance_wallet, color: AppColors.blueDark),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Account',
+                                  style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: AppColors.blueDark,
+                                  ),
+                                ),
+                                Text(
+                                  accountProvider.account?.accountNumber ?? 'No Account',
+                                  style: const TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.blueDark,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    ListTile(
-                      title: const Text(
-                        'Balance',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: isHidden
-                          ? const Text('Rp *********', style: TextStyle(color: AppColors.blueDark,
-                      fontWeight: FontWeight
-                          .bold, fontSize: 24))
-                          : Text(CurrencyFormatter.formatToIdr(account!
-                          .balance), style:
-                      const TextStyle
-                        (color: AppColors.blueDark, fontWeight: FontWeight
-                          .bold, fontSize: 24),),
-                      trailing: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            isHidden = !isHidden;
-                          });
-                        },
-                        child: const Icon(Icons.remove_red_eye, color:
-                        AppColors.blueDark),
-                      ),
-                    )
-                  ],
+                      ListTile(
+                        title: const Text(
+                          'Balance'
+                        ),
+                        subtitle: accountProvider.isHidden
+                            ? const Text('Rp *********', style: TextStyle(color: AppColors.blueDark,
+                            fontWeight: FontWeight
+                                .bold, fontSize: 18))
+                            : Text(CurrencyFormatter.formatToIdr
+                          (accountProvider.account?.balance ?? 0.0), style:
+                        const TextStyle
+                          (color: AppColors.blueDark, fontWeight: FontWeight
+                            .bold, fontSize: 18),),
+                        trailing: TextButton(
+                          onPressed: () {
+                            accountProvider.toggleVisibility();
+                          },
+                          child: const Icon(Icons.remove_red_eye, color:
+                          AppColors.blueDark),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               GridView.count(
@@ -193,7 +207,6 @@ class _HomePageState extends State<HomePage> {
                         // Navigator.push(context, MaterialPageRoute(builder: (context) {
                         //   return CardPage();
                         // }));
-                        print('card pressed');
                       },
                     ),
                   ),
@@ -215,7 +228,6 @@ class _HomePageState extends State<HomePage> {
                         // Navigator.push(context, MaterialPageRoute(builder: (context) {
                         //   return HistoryPage();
                         // }));
-                        print('history pressed');
                       },
                     ),
                   ),
@@ -233,48 +245,65 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              FutureBuilder(
-                future: transactionUsecase.getTransactionsByAccountId
-                  (account!.accountId),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (snapshot.data == null) {
-                    return const Center(child: Text('No transactions', style:
-                    TextStyle(color: Colors.white),));
-                  } else {
-                    var transactions = snapshot.data;
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        var transaction = transactions?[index];
-                        return Card(
-                          color: Colors.white,
-                          child: ListTile(
-                            title: Text(transaction?.description ?? 'No '
-                                'description'),
-                            subtitle: Text(DateFormat('yyyy-MM-dd HH:mm')
-                                .format(transaction?.transactionDate ?? DateTime.now())
-                                , style: const TextStyle(fontSize:
-                            12)),
-                            trailing: transaction?.sourceAccountId == account
-                                .accountId
-                                ? Text('-${CurrencyFormatter.formatToIdr
-                              (transaction!.amount as double)}', style: const TextStyle
-                              (color: Colors.red, fontWeight: FontWeight.bold))
-                                : Text('+${CurrencyFormatter.formatToIdr
-                              (transaction!.amount as double)}', style: const TextStyle
-                              (color: Colors.green, fontWeight: FontWeight.bold))
-                          ),
-                        );
-                      },
-                    );
-                  }
-                },
+              Card(
+                margin: EdgeInsets.zero,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                )),
+                child: Consumer<TransactionProvider>(
+                  builder: (context, transactionProvider, child) {
+                    // Check loading, error, and empty states based on provider data
+                    if (transactionProvider.isLoading) {
+                      return const Padding(
+                        padding: EdgeInsets.fromLTRB(24, 56, 24, 56),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (transactionProvider.transactions.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.fromLTRB(24, 56, 24, 56),
+                        child: Center(child: Column(
+                          children: [
+                            Icon(Icons.error, color: Colors.red),
+                            SizedBox(height: 10),
+                            Text('No Transaction',
+                                style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                          ],
+                        )),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 5,
+                          itemBuilder: (context, index) {
+                            var transaction = transactionProvider.transactions[index];
+                            return ListTile(
+                              title: Text(transaction.description ?? 'No '
+                                  'description'),
+                              subtitle: Text(DateFormat('yyyy-MM-dd HH:mm')
+                                  .format(transaction.transactionDate),
+                                  style: const TextStyle(fontSize: 12)),
+                              trailing: (transaction.sourceAccountId !=
+                                  account!.accountId ||
+                                  transaction.transactionCategoryId == 3)
+                                  ? Text('-${CurrencyFormatter.formatToIdr(transaction.amount as double)}',
+                                  style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold))
+                                  : Text('+${CurrencyFormatter.formatToIdr(transaction.amount as double)}',
+                                  style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const Divider(color: Colors.grey);
+                          }
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             ]),
           ),
