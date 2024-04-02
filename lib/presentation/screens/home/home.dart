@@ -10,6 +10,8 @@ import 'package:bankbank/presentation/common/theme_data.dart';
 import 'package:bankbank/presentation/providers/account_provider.dart';
 import 'package:bankbank/presentation/providers/transaction_provider.dart';
 import 'package:bankbank/presentation/screens/auth/login.dart';
+import 'package:bankbank/presentation/screens/transactions/transaction_history_page.dart';
+import 'package:bankbank/presentation/screens/transactions/transfer_page.dart';
 import 'package:bankbank/utils/curreny_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -106,12 +108,12 @@ class _HomePageState extends State<HomePage> {
               Consumer<AccountProvider>(
                 builder: (context, accountProvider, child) => Card(
                   margin: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Row(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
                           children: [
                             const Icon(Icons.account_balance_wallet, color: AppColors.blueDark),
                             const SizedBox(width: 10),
@@ -137,29 +139,32 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
-                      ),
-                      ListTile(
-                        title: const Text(
-                          'Balance'
-                        ),
-                        subtitle: accountProvider.isHidden
-                            ? const Text('Rp *********', style: TextStyle(color: AppColors.blueDark,
-                            fontWeight: FontWeight
-                                .bold, fontSize: 18))
-                            : Text(CurrencyFormatter.formatToIdr
-                          (accountProvider.account?.balance ?? 0.0), style:
-                        const TextStyle
-                          (color: AppColors.blueDark, fontWeight: FontWeight
-                            .bold, fontSize: 18),),
-                        trailing: TextButton(
-                          onPressed: () {
-                            accountProvider.toggleVisibility();
-                          },
-                          child: const Icon(Icons.remove_red_eye, color:
-                          AppColors.blueDark),
-                        ),
-                      )
-                    ],
+                        ListTile(
+                          contentPadding: const EdgeInsets.all(0),
+                          title: const Text(
+                            'Balance'
+                          ),
+                          subtitle: accountProvider.isHidden
+                              ? const Text('Rp *********', style: TextStyle(color: AppColors.blueDark,
+                              fontWeight: FontWeight
+                                  .bold, fontSize: 18))
+                              : Text(CurrencyFormatter.formatToIdr
+                            (accountProvider.account?.balance ?? 0.0), style:
+                          const TextStyle
+                            (color: AppColors.blueDark, fontWeight: FontWeight
+                              .bold, fontSize: 18),),
+                          trailing: TextButton(
+                            onPressed: () {
+                              accountProvider.toggleVisibility();
+                            },
+                            child: accountProvider.isHidden
+                                ? const Icon(Icons.remove_red_eye, color:
+                            AppColors.blueDark)
+                                : const Icon(Icons.visibility_off, color: AppColors.blueDark),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -183,9 +188,9 @@ class _HomePageState extends State<HomePage> {
                         )
                       ),
                       onTap: () {
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        //   return AccountPage();
-                        // }));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return TransferPage();
+                        }));
                       },
                     ),
                   ),
@@ -225,9 +230,9 @@ class _HomePageState extends State<HomePage> {
                         )
                       ),
                       onTap: () {
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        //   return HistoryPage();
-                        // }));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return const TransactionHistoryPage();
+                        }));
                       },
                     ),
                   ),
@@ -278,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                         child: ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 5,
+                          itemCount: 3,
                           itemBuilder: (context, index) {
                             var transaction = transactionProvider.transactions[index];
                             return ListTile(
@@ -286,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                   'description'),
                               subtitle: Text(DateFormat('yyyy-MM-dd HH:mm')
                                   .format(transaction.transactionDate),
-                                  style: const TextStyle(fontSize: 12)),
+                                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
                               trailing: (transaction.sourceAccountId !=
                                   account!.accountId ||
                                   transaction.transactionCategoryId == 3)
@@ -297,7 +302,8 @@ class _HomePageState extends State<HomePage> {
                             );
                           },
                           separatorBuilder: (context, index) {
-                            return const Divider(color: Colors.grey);
+                            return const Divider(color: Colors.grey,
+                                thickness: 0.2);
                           }
                         ),
                       );
