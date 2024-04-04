@@ -1,3 +1,4 @@
+import 'package:bankbank/domain/entities/user_register.dart';
 import 'package:bankbank/presentation/common/theme_data.dart';
 import 'package:bankbank/presentation/providers/user_provider.dart';
 import 'package:bankbank/presentation/screens/auth/login.dart';
@@ -191,7 +192,7 @@ class RegisterPage extends StatelessWidget {
                           showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Text('Register'),
+                                title: const Text('Sign up'),
                                 content: const Text('Are you sure the data '
                                     'is correct?'),
                                 actions: [
@@ -202,11 +203,29 @@ class RegisterPage extends StatelessWidget {
                                     child: const Text('Cancel'),
                                   ),
                                   TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (context) => const LoginPage()),
-                                              (route) => false);
+                                    onPressed: () async {
+                                      var user = UserRegister(
+                                        firstName: firstNameController.text,
+                                        lastName: lastNameController.text,
+                                        phoneNumber: phoneController.text.toString(),
+                                        dateOfBirth: userProvider.selectedDate,
+                                        username: usernameController.text,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                        confirmPassword: confirmPasswordController.text,
+                                      );
+                                      try {
+                                        await userProvider.register(user);
+
+                                        Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                                              (route) => false,
+                                        );
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('Error: $e')),
+                                        );
+                                      }
                                     },
                                     child: const Text('Yes'),
                                   ),

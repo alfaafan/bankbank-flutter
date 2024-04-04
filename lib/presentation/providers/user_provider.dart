@@ -65,14 +65,15 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void register(UserRegister user) async {
+  Future<UserModel?> register(UserRegister user) async {
     _isLoading = true;
     notifyListeners();
     try {
-      await _userUsecase.register(user);
-      login(user.username, user.password);
+      var createdUser = await _userUsecase.register(user);
+      return createdUser;
     } catch (e) {
       print(e);
+      return null;
     } finally {
       _isLoading = false;
       notifyListeners();

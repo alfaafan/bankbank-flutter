@@ -5,6 +5,7 @@ import 'package:bankbank/domain/entities/user_login.dart';
 import 'package:bankbank/domain/entities/user_register.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class UsersRemoteDatasource {
   final http.Client client = http.Client();
@@ -13,21 +14,22 @@ class UsersRemoteDatasource {
 
   Future<String> register(UserRegister user) async {
     final response = await client.post(
-        Uri.parse('$baseUrl/register'),
+        Uri.parse(baseUrl),
         headers: {
-          'accept': 'application/json',
+          'accept': '*/*',
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
         },
-        body: {
+        body: jsonEncode({
           'Username': user.username,
           'Password': user.password,
+          'ConfirmPassword': user.confirmPassword,
           'Email': user.email,
           'FirstName': user.firstName,
           'LastName': user.lastName,
-          'Phone': user.phoneNumber,
-          'DateOfBirth': user.dateOfBirth,
-        }
+          'Phone': user.phoneNumber.toString(),
+          'DateOfBirth': DateFormat('yyyy-MM-dd').format(user.dateOfBirth),
+        })
     );
 
     if (response.statusCode != 200) {

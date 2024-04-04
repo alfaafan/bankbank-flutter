@@ -1,6 +1,7 @@
 import 'package:bankbank/data/repositories/user_repository.dart';
 import 'package:bankbank/domain/usecases/user_usecase.dart';
 import 'package:bankbank/presentation/common/theme_data.dart';
+import 'package:bankbank/presentation/screens/auth/register.dart';
 import 'package:bankbank/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -129,6 +130,8 @@ class _LoginPageState extends State<LoginPage> {
                           TextButton(
                             onPressed: () {
                               // Navigate to the sign up page
+                              Navigator.of(context).push(MaterialPageRoute
+                                (builder: (context) => const RegisterPage()));
                             },
                             style: TextButton.styleFrom(
                               foregroundColor: AppColors.blueDark,
