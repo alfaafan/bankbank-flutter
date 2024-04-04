@@ -2,6 +2,7 @@ import 'package:bankbank/data/model/user.dart';
 import 'package:bankbank/data/repositories/user_repository.dart';
 import 'package:bankbank/domain/entities/user.dart';
 import 'package:bankbank/domain/entities/user_login.dart';
+import 'package:bankbank/domain/entities/user_register.dart';
 
 class UserUsecase {
   final UserRepository _userRepository;
@@ -16,8 +17,8 @@ class UserUsecase {
     return await _userRepository.getUserByAccountNumber(accountNumber);
   }
 
-  Future<UserModel> register(String username, String password) async {
-    return await _userRepository.register(username, password);
+  Future<UserModel> register(UserRegister user) async {
+    return await _userRepository.register(user);
   }
 
   Future<UserModel?> login(String username, String password) async {

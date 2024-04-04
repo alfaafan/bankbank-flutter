@@ -1,5 +1,6 @@
 import 'package:bankbank/presentation/common/theme_data.dart';
 import 'package:bankbank/presentation/screens/auth/login.dart';
+import 'package:bankbank/presentation/screens/auth/register.dart';
 import 'package:bankbank/presentation/screens/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -52,7 +53,7 @@ class LandingPage extends StatelessWidget {
                 onTap: () {
                   // Navigate
                   Navigator.push(context, MaterialPageRoute(builder:
-                      (context) => const HomePage()));
+                      (context) => const RegisterPage()));
                 },
               ),
             ),

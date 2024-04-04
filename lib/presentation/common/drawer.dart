@@ -2,11 +2,14 @@ import 'package:bankbank/data/model/account.dart';
 import 'package:bankbank/data/model/card.dart';
 import 'package:bankbank/data/model/role.dart';
 import 'package:bankbank/data/model/user.dart';
+import 'package:bankbank/presentation/common/theme_data.dart';
+import 'package:bankbank/presentation/providers/user_provider.dart';
 import 'package:bankbank/presentation/screens/auth/login.dart';
 import 'package:bankbank/presentation/screens/home/landing_page.dart';
 import 'package:bankbank/presentation/screens/home/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -34,8 +37,13 @@ class AppDrawer extends StatelessWidget {
               leading: const Icon(Icons.settings),
               title: const Text('Settings'),
               onTap: () {
-                // Navigate to settings page
-                Navigator.pushNamed(context, '/settings'); // Assuming route name
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    backgroundColor: AppColors.blueLight,
+                    content: Text('Settings page coming soon'),
+                  ),
+                );
               },
             ),
             // Add more menu items as needed
@@ -57,6 +65,9 @@ class AppDrawer extends StatelessWidget {
                               Hive.box<Account>('accountBox').clear();
                               Hive.box<UserCard>('cardBox').clear();
                               Hive.box<Role>('roleBox').clear();
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                Provider.of<UserProvider>(context).clear();
+                              });
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 Navigator.of(context).pushAndRemoveUntil
                                   (MaterialPageRoute(builder: (context) => const

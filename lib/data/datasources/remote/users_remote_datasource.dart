@@ -1,18 +1,32 @@
 import 'dart:convert';
 
+import 'package:bankbank/data/model/user.dart';
 import 'package:bankbank/domain/entities/user_login.dart';
+import 'package:bankbank/domain/entities/user_register.dart';
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 
 class UsersRemoteDatasource {
   final http.Client client = http.Client();
   final String baseUrl = 'https://app.actualsolusi.com/bsi/BankBank/api/Users';
+  var userBox = Hive.box<User>('userBox');
 
-  Future<String> register(String username, String password) async {
+  Future<String> register(UserRegister user) async {
     final response = await client.post(
         Uri.parse('$baseUrl/register'),
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
         body: {
-          'username': username,
-          'password': password,
+          'Username': user.username,
+          'Password': user.password,
+          'Email': user.email,
+          'FirstName': user.firstName,
+          'LastName': user.lastName,
+          'Phone': user.phoneNumber,
+          'DateOfBirth': user.dateOfBirth,
         }
     );
 
@@ -44,8 +58,15 @@ class UsersRemoteDatasource {
   }
 
   Future<String> getUserById(int userId) async {
+    var user = userBox.get('user');
     final response = await client.get(
         Uri.parse('$baseUrl/$userId'),
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Authorization': 'Bearer ${user?.token}',
+        },
     );
 
     if (response.statusCode != 200) {

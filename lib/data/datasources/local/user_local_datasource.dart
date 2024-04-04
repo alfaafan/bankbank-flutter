@@ -24,6 +24,7 @@ class UserLocalDatasource {
       lastLoginDate: user.lastLoginDate,
       token: user.token
     );
+
     await userBox.put('user', userHive);
 
     for (var account in user.accounts) {
@@ -57,7 +58,7 @@ class UserLocalDatasource {
   }
 
   Future<User?> getUser() async {
-    var user = userBox.getAt(0);
+    var user = userBox.get('user');
     return user;
   }
 }

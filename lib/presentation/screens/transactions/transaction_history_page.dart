@@ -63,9 +63,9 @@ class TransactionHistoryPage extends StatelessWidget {
                           subtitle: Text(DateFormat('yyyy-MM-dd HH:mm')
                               .format(transaction.transactionDate),
                               style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                          trailing: (transaction.sourceAccountId !=
-                              account!.accountId ||
-                              transaction.transactionCategoryId == 3)
+                          trailing: (transaction.sourceAccountId ==
+                              account!.accountId && transaction
+                              .transactionCategoryId != 4)
                               ? Text('- ${CurrencyFormatter.formatToIdr
                             (transaction.amount)}',
                               style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold))
