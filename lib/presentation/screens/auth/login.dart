@@ -82,60 +82,66 @@ class _LoginPageState extends State<LoginPage> {
                         },
                       ),
                       const SizedBox(height: 16.0),
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            try {
-                              var user = await userUsecase.login
-                                (_usernameController
-                                  .text, _passwordController.text);
-          
-                              if (user == null){
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid username or password')));
+                      isLoading ? const CircularProgressIndicator
+                        (color: AppColors.blueDark) :
+                      Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                try {
+                                  var user = await userUsecase.login
+                                    (_usernameController
+                                      .text, _passwordController.text);
+
+                                  if (user == null){
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid username or password')));
+                                  }
+                                  
+                                  Navigator.of(context).pushAndRemoveUntil
+                                    (MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Error: $e')),
+                                  );
+                                } finally {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
                               }
-          
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => const HomePage()));
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Error: $e')),
-                              );
-                            } finally {
-                              setState(() {
-                                isLoading = false;
-                              });
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.blueDark,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 48,
-                              vertical: 18), // Button padding
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10), // Button border radius
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.blueDark,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(horizontal: 48,
+                                  vertical: 18), // Button padding
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10), // Button border radius
+                              ),
+                            ),
+                            child: const Text('Log in')
                           ),
-                        ),
-                        child: isLoading ? const CircularProgressIndicator
-                          (color: Colors.white) : const Text('Log in')
-                      ),
-                      const SizedBox(height: 8.0),
-                      TextButton(
-                        onPressed: () {
-                          // Navigate to the sign up page
-                        },
-                        style: TextButton.styleFrom(
-                          foregroundColor: AppColors.blueDark,
-                          padding: const EdgeInsets.symmetric(horizontal: 48,
-                              vertical: 18), // Button padding
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10), // Button border radius
+                          const SizedBox(height: 8.0),
+                          TextButton(
+                            onPressed: () {
+                              // Navigate to the sign up page
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.blueDark,
+                              padding: const EdgeInsets.symmetric(horizontal: 48,
+                                  vertical: 18), // Button padding
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10), // Button border radius
+                              ),
+                            ),
+                            child: const Text('Sign up', style: TextStyle(fontWeight:
+                            FontWeight.bold),),
                           ),
-                        ),
-                        child: const Text('Sign up', style: TextStyle(fontWeight:
-                        FontWeight.bold),),
+                        ],
                       ),
                     ],
                   ),

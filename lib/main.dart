@@ -1,9 +1,12 @@
 import 'package:bankbank/data/datasources/local/hive_datasource.dart';
+import 'package:bankbank/data/model/user.dart';
 import 'package:bankbank/presentation/common/theme_data.dart';
 import 'package:bankbank/presentation/providers/account_provider.dart';
 import 'package:bankbank/presentation/providers/transaction_provider.dart';
 import 'package:bankbank/presentation/providers/user_provider.dart';
 import 'package:bankbank/presentation/screens/home/home.dart';
+import 'package:bankbank/presentation/screens/home/landing_page.dart';
+import 'package:bankbank/presentation/screens/transactions/transfer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,7 +45,8 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.quicksand().fontFamily,
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: Provider.of<UserProvider>(context, listen: false).isLoggedIn() ?
+      const HomePage() : const LandingPage(),
       debugShowCheckedModeBanner: false,
     );
   }

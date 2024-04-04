@@ -3,6 +3,8 @@ import 'package:bankbank/data/model/card.dart';
 import 'package:bankbank/data/model/role.dart';
 import 'package:bankbank/data/model/user.dart';
 import 'package:bankbank/presentation/screens/auth/login.dart';
+import 'package:bankbank/presentation/screens/home/landing_page.dart';
+import 'package:bankbank/presentation/screens/home/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
@@ -24,8 +26,8 @@ class AppDrawer extends StatelessWidget {
               leading: const Icon(Icons.account_circle),
               title: const Text('Profile'),
               onTap: () {
-                // Navigate to profile page
-                Navigator.pushNamed(context, '/profile'); // Assuming route name
+                Navigator.of(context).push(MaterialPageRoute(builder:
+                    (context) => const ProfilePage()));
               },
             ),
             ListTile(
@@ -56,9 +58,9 @@ class AppDrawer extends StatelessWidget {
                               Hive.box<UserCard>('cardBox').clear();
                               Hive.box<Role>('roleBox').clear();
                               WidgetsBinding.instance.addPostFrameCallback((_) {
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                                  return const LoginPage();
-                                }));
+                                Navigator.of(context).pushAndRemoveUntil
+                                  (MaterialPageRoute(builder: (context) => const
+                                  LandingPage()), (route) => false);
                               });
 
                             },

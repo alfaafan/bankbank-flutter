@@ -34,6 +34,12 @@ class UserRepository {
     return user;
   }
 
+  Future<UserModel> getUserByAccountNumber(String accountNumber) async {
+    var response = jsonDecode(await remoteDatasource.getUserByAccountNumber(accountNumber));
+    var user = UserModel.fromJson(response);
+    return user;
+  }
+
   Future<User?> getUserLogin() async {
     var user = await localDatasource.getUser();
     return user;

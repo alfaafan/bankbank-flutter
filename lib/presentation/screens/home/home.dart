@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 180.0,
+            expandedHeight: 160.0,
             backgroundColor: AppColors.blueDark,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -110,7 +110,9 @@ class _HomePageState extends State<HomePage> {
                   margin: const EdgeInsets.all(12.0),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
+                    child: accountProvider.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                        : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Row(
@@ -183,7 +185,8 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Icon(Icons.payments, color: AppColors.blueDark),
                             SizedBox(height: 10),
-                            Text('Transfer'),
+                            Text('Transfer', style: TextStyle(color:
+                            AppColors.blueDark, fontWeight: FontWeight.bold)),
                           ],
                         )
                       ),
@@ -204,14 +207,19 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Icon(Icons.receipt_long, color: AppColors.blueDark),
                             SizedBox(height: 10),
-                            Text('Pay Bills'),
+                            Text('Pay Bills', style: TextStyle(color:
+                            AppColors.blueDark, fontWeight: FontWeight.bold)),
                           ],
                         )
                       ),
                       onTap: () {
-                        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        //   return CardPage();
-                        // }));
+                        // snackbar
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          backgroundColor: AppColors.blueLight,
+                          content: Text('Feature not available yet', style: TextStyle(
+                            color: Colors.white,
+                          )),
+                        ));
                       },
                     ),
                   ),
@@ -225,7 +233,8 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Icon(Icons.history, color: AppColors.blueDark),
                             SizedBox(height: 10),
-                            Text('History'),
+                            Text('History', style: TextStyle(color: AppColors
+                                .blueDark, fontWeight: FontWeight.bold)),
                           ],
                         )
                       ),
@@ -240,7 +249,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 20),
               const Padding(
-                padding: EdgeInsets.all(12.0),
+                padding: EdgeInsets.all(16.0),
                 child: Text(
                   'Recent Transactions',
                   style: TextStyle(
@@ -270,16 +279,18 @@ class _HomePageState extends State<HomePage> {
                         padding: EdgeInsets.fromLTRB(24, 56, 24, 56),
                         child: Center(child: Column(
                           children: [
+                            SizedBox(height: 40),
                             Icon(Icons.error, color: Colors.red),
                             SizedBox(height: 10),
                             Text('No Transaction',
                                 style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 40)
                           ],
                         )),
                       );
                     } else {
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                         child: ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -288,16 +299,20 @@ class _HomePageState extends State<HomePage> {
                             var transaction = transactionProvider.transactions[index];
                             return ListTile(
                               title: Text(transaction.description ?? 'No '
-                                  'description'),
+                                  'description', style: const TextStyle
+                                (fontSize: 14, fontWeight: FontWeight.bold,
+                                  color: AppColors.blueDark)),
                               subtitle: Text(DateFormat('yyyy-MM-dd HH:mm')
                                   .format(transaction.transactionDate),
                                   style: const TextStyle(fontSize: 12, color: Colors.grey)),
                               trailing: (transaction.sourceAccountId !=
                                   account!.accountId ||
                                   transaction.transactionCategoryId == 3)
-                                  ? Text('-${CurrencyFormatter.formatToIdr(transaction.amount as double)}',
+                                  ? Text('- ${CurrencyFormatter.formatToIdr
+                                (transaction.amount)}',
                                   style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold))
-                                  : Text('+${CurrencyFormatter.formatToIdr(transaction.amount as double)}',
+                                  : Text('+ ${CurrencyFormatter.formatToIdr
+                                (transaction.amount)}',
                                   style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
                             );
                           },

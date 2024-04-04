@@ -13,26 +13,26 @@ class TransactionModel {
   int transactionCategoryId;
   dynamic transactionCategory;
   int userId;
-  int sourceAccountId;
-  int receiverAccountId;
+  int? sourceAccountId;
+  int? receiverAccountId;
   dynamic receiverAccountNumber;
   dynamic billId;
-  int amount;
-  dynamic description;
+  double amount;
+  String? description;
   DateTime transactionDate;
   String status;
 
   TransactionModel({
     required this.transactionId,
     required this.transactionCategoryId,
-    required this.transactionCategory,
+    this.transactionCategory,
     required this.userId,
-    required this.sourceAccountId,
-    required this.receiverAccountId,
-    required this.receiverAccountNumber,
-    required this.billId,
+    this.sourceAccountId,
+    this.receiverAccountId,
+    this.receiverAccountNumber,
+    this.billId,
     required this.amount,
-    required this.description,
+    this.description,
     required this.transactionDate,
     required this.status,
   });

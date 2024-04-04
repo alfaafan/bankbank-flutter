@@ -12,6 +12,10 @@ class UserUsecase {
     return await _userRepository.getUserById(userId);
   }
 
+  Future<UserModel> getUserByAccountNumber(String accountNumber) async {
+    return await _userRepository.getUserByAccountNumber(accountNumber);
+  }
+
   Future<UserModel> register(String username, String password) async {
     return await _userRepository.register(username, password);
   }

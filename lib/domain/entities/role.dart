@@ -2,7 +2,7 @@ class RoleModel {
   String roleName;
 
   RoleModel({
-    required this.roleName,
+    required this.roleName
   });
 
   factory RoleModel.fromJson(Map<String, dynamic> json) => RoleModel(

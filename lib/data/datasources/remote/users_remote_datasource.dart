@@ -5,11 +5,11 @@ import 'package:http/http.dart' as http;
 
 class UsersRemoteDatasource {
   final http.Client client = http.Client();
+  final String baseUrl = 'https://app.actualsolusi.com/bsi/BankBank/api/Users';
 
   Future<String> register(String username, String password) async {
     final response = await client.post(
-        Uri.parse('https://app.actualsolusi'
-            '.com/bsi/bankbank/api/users/register'),
+        Uri.parse('$baseUrl/register'),
         body: {
           'username': username,
           'password': password,
@@ -24,7 +24,7 @@ class UsersRemoteDatasource {
 
   Future<String> login(UserLogin user) async {
     final response = await client.post(
-        Uri.parse('https://app.actualsolusi.com/bsi/bankbank/api/Users/login'),
+        Uri.parse('$baseUrl/login'),
         headers: {
           'accept': 'application/json',
           'Content-Type': 'application/json',
@@ -45,7 +45,18 @@ class UsersRemoteDatasource {
 
   Future<String> getUserById(int userId) async {
     final response = await client.get(
-        Uri.parse('https://app.actualsolusi.com/bsi/bankbank/api/users/$userId'),
+        Uri.parse('$baseUrl/$userId'),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to get user');
+    }
+    return response.body;
+  }
+
+  Future<String> getUserByAccountNumber(String accountNumber) async {
+    final response = await client.get(
+        Uri.parse('$baseUrl/account/$accountNumber'),
     );
 
     if (response.statusCode != 200) {

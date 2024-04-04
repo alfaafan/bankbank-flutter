@@ -34,42 +34,52 @@ class TransactionHistoryPage extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           }
-          return Card(
-            margin: EdgeInsets.zero,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
-              )
-            ),
-            child: SingleChildScrollView(
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: transactionProvider.transactions.length,
-                  itemBuilder: (context, index) {
-                    var accountBox = Hive.box<Account>('accountBox');
-                    var account = accountBox.get('account');
-                    var transaction = transactionProvider.transactions[index];
-                    return ListTile(
-                      title: Text(transaction.description ?? 'No '
-                          'description'),
-                      subtitle: Text(DateFormat('yyyy-MM-dd HH:mm')
-                          .format(transaction.transactionDate),
-                          style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                      trailing: (transaction.sourceAccountId !=
-                          account!.accountId ||
-                          transaction.transactionCategoryId == 3)
-                          ? Text('-${CurrencyFormatter.formatToIdr(transaction.amount as double)}',
-                          style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold))
-                          : Text('+${CurrencyFormatter.formatToIdr(transaction.amount as double)}',
-                          style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
-                    );
-                  },
-                  separatorBuilder: (context, index) {
-                    return const Divider(color: Colors.grey,
-                        thickness: 0.2);
-                  }
+          return SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Card(
+              margin: EdgeInsets.zero,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                )
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: transactionProvider.transactions.length,
+                      itemBuilder: (context, index) {
+                        var accountBox = Hive.box<Account>('accountBox');
+                        var account = accountBox.get('account');
+                        var transaction = transactionProvider.transactions[index];
+                        return ListTile(
+                          title: Text(transaction.description ?? 'No '
+                              'description', style: const TextStyle
+                            (fontSize: 14, fontWeight: FontWeight.bold, color:
+                          AppColors.blueDark)),
+                          subtitle: Text(DateFormat('yyyy-MM-dd HH:mm')
+                              .format(transaction.transactionDate),
+                              style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                          trailing: (transaction.sourceAccountId !=
+                              account!.accountId ||
+                              transaction.transactionCategoryId == 3)
+                              ? Text('- ${CurrencyFormatter.formatToIdr
+                            (transaction.amount)}',
+                              style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold))
+                              : Text('+ ${CurrencyFormatter.formatToIdr
+                            (transaction.amount)}',
+                              style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const Divider(color: Colors.grey,
+                            thickness: 0.2);
+                      }
+                  ),
+                ),
               ),
             ),
           );

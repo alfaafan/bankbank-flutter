@@ -14,6 +14,10 @@ class UserProvider extends ChangeNotifier {
   UserModel? get user => _user;
   bool get isLoading => _isLoading;
 
+  bool isLoggedIn() {
+    return userBox.get('user') != null;
+  }
+
   Future<void> fetchUser() async {
     _isLoading = true;
     notifyListeners();
@@ -38,4 +42,6 @@ class UserProvider extends ChangeNotifier {
     var user = await _userUsecase.login(username, password);
     setUser(user);
   }
+
+
 }
