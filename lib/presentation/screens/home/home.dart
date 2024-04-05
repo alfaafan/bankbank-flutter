@@ -14,6 +14,7 @@ import 'package:bankbank/presentation/screens/transactions/transaction_history_p
 import 'package:bankbank/presentation/screens/transactions/transfer_page.dart';
 import 'package:bankbank/utils/curreny_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,16 @@ class _HomePageState extends State<HomePage> {
   late final UserUsecase userUsecase;
   late final TransactionUsecase transactionUsecase;
   bool isHidden = true;
+
+  Future<void> copyText(String text) async {
+    await Clipboard.setData(ClipboardData(text: text));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      backgroundColor: AppColors.blueLight,
+      content: Text('Copied to clipboard', style: TextStyle(
+        color: Colors.white,
+      )),
+    ));
+  }
 
   @override
   void initState() {
@@ -138,6 +149,14 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               ],
+                            ),
+                            const SizedBox(width: 12),
+                            GestureDetector(
+                              onTap: () {
+                                copyText(accountProvider.account?.accountNumber ?? '');
+                              },
+                              child: const Icon(Icons.copy, color: AppColors.blueDark, size:
+                              18),
                             ),
                           ],
                         ),
