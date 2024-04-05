@@ -104,9 +104,10 @@ class TransferConfirmationPage extends StatelessWidget {
                                       listen: false).transfer(recipientId, amount,
                                       description);
                                   if (transaction != null) {
-                                    Navigator.pushReplacement(context,
-                                        MaterialPageRoute(builder: (context)
-                                    => const HomePage()));
+                                    Navigator.pushAndRemoveUntil(context,
+                                        MaterialPageRoute(builder: (context) =>
+                                            const HomePage()), (route) =>
+                                        false);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

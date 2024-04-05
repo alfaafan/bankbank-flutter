@@ -2,6 +2,7 @@ import 'package:bankbank/presentation/common/app_bar.dart';
 import 'package:bankbank/presentation/common/theme_data.dart';
 import 'package:bankbank/presentation/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -37,8 +38,10 @@ class ProfilePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
+                  SvgPicture.asset('assets/svg/profile.svg', height: 150.0),
+                  const SizedBox(height: 16.0),
                   const Text(
-                    'Profile Page',
+                    'Profile Information',
                     style: TextStyle(fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
